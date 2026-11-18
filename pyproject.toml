@@ -13,7 +13,11 @@ markers = [
     "browser: tests that launch a real Chromium via Playwright",
     "api: tests that need FastAPI + SQLAlchemy installed",
 ]
-filterwarnings = ["ignore::DeprecationWarning:uvicorn.*"]
+filterwarnings = [
+    "ignore::DeprecationWarning:uvicorn.*",
+    # newer Starlette prefers httpx2 for TestClient; httpx still works and is what FastAPI documents
+    "ignore:Using .httpx. with .starlette.testclient. is deprecated",
+]
 
 [tool.ruff]
 line-length = 120

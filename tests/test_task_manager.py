@@ -177,3 +177,24 @@ async def test_failing_hook_does_not_break_the_task() -> None:
 
     final = await tm.wait((await tm.submit("x", job, on_success=bad_hook)).id, timeout=5)
     assert final.status is TaskStatus.SUCCEEDED
+
+
+async def test_terminal_status_is_saved_only_after_hooks_ran() -> None:
+    """A client polling the task must never see 'finished' before the result is applied."""
+    tm = manager()
+    seen: list[str] = []
+
+    async def ok(ctx: TaskContext) -> dict:
+        return {}
+
+    async def boom(ctx: TaskContext) -> dict:
+        raise AccessBlockedError("challenge page")
+
+    async def hook(record: TaskRecord, *_: object) -> None:
+        stored = await tm.store.get(record.id)
+        assert stored is not None
+        seen.append(stored.status.value)
+
+    await tm.wait((await tm.submit("ok", ok, on_success=hook)).id, timeout=5)
+    await tm.wait((await tm.submit("boom", boom, on_failure=hook)).id, timeout=5)
+    assert seen == ["running", "running"]

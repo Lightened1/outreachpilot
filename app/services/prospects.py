@@ -209,7 +209,7 @@ class ProspectService:
         )
         log.info(
             "prospects.imported",
-            extra={"created": report.created, "duplicates": report.duplicates, "invalid": report.invalid},
+            extra={"rows_created": report.created, "rows_duplicate": report.duplicates, "rows_invalid": report.invalid},
         )
         return report
 

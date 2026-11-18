@@ -247,11 +247,13 @@ class TaskManager:
                 if failure is None:
                     record.result = result or {}
                     record.error = None
+                    # Apply the result first: a task only reports a terminal status once its effects
+                    # are visible, so a client that sees "succeeded" never reads stale data.
+                    await self._call_hook(on_success, record, record.result)
                     record.finished_at = utcnow()
                     record.add_event(TaskStatus.SUCCEEDED, "succeeded")
                     await self.store.save(record)
                     log.info("task.succeeded", extra={"task_id": record.id, "attempts": record.attempts})
-                    await self._call_hook(on_success, record, record.result)
                     return
 
                 payload = error_payload(failure)
@@ -275,8 +277,9 @@ class TaskManager:
                     continue
 
                 record.error = payload
-                record.finished_at = utcnow()
                 reason = "non-retryable error" if not is_retryable(failure) else "retries exhausted"
+                await self._call_hook(on_failure, record, failure)  # before the terminal status (see above)
+                record.finished_at = utcnow()
                 record.add_event(TaskStatus.FAILED, f"failed after {record.attempts} attempt(s): {reason}", payload)
                 await self.store.save(record)
                 log.error(
@@ -288,16 +291,15 @@ class TaskManager:
                         "reason": reason,
                     },
                 )
-                await self._call_hook(on_failure, record, failure)
                 return
         except asyncio.CancelledError:
             exc = TaskCancelledError("Task was cancelled.")
             record.error = error_payload(exc)
+            await asyncio.shield(self._call_hook(on_failure, record, exc))
             record.finished_at = utcnow()
             record.add_event(TaskStatus.CANCELLED, "cancelled", record.error)
             await asyncio.shield(self.store.save(record))
             log.warning("task.cancelled", extra={"task_id": record.id})
-            await asyncio.shield(self._call_hook(on_failure, record, exc))
 
     @staticmethod
     async def _call_hook(hook: Callable[..., Awaitable[None]] | None, *args: Any) -> None:

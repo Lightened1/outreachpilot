@@ -35,3 +35,17 @@ def test_json_logs_include_fields_and_are_redacted() -> None:
     record = json.loads(stream.getvalue().strip())
     assert record["event"] == "llm.request" and record["task_id"] == "t1"
     assert record["api_key"] == "***" and record["logger"] == "outreachpilot.tests"
+
+
+def test_log_fields_never_shadow_logrecord_attributes() -> None:
+    """logging raises KeyError for extra={"created": ...} and similar; catch that before it ships."""
+    import logging
+    import re
+    from pathlib import Path
+
+    reserved = set(vars(logging.LogRecord("n", 20, "p", 1, "m", (), None))) | {"message", "asctime"}
+    offenders = []
+    for path in Path(__file__).resolve().parents[1].joinpath("app").rglob("*.py"):
+        for block in re.findall(r"extra=\{(.*?)\}", path.read_text(encoding="utf-8"), re.S):
+            offenders += [f"{path.name}:{key}" for key in re.findall(r'"(\w+)"\s*:', block) if key in reserved]
+    assert offenders == []
