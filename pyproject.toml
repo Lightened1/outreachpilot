@@ -17,6 +17,9 @@ filterwarnings = [
     "ignore::DeprecationWarning:uvicorn.*",
     # newer Starlette prefers httpx2 for TestClient; httpx still works and is what FastAPI documents
     "ignore:Using .httpx. with .starlette.testclient. is deprecated",
+    # Windows only: asyncio reports Playwright's subprocess pipes being garbage-collected after a test's
+    # event loop has closed. Harmless cleanup noise; any other unraisable exception is still reported.
+    "ignore:Exception ignored in. <function (_ProactorBasePipeTransport|BaseSubprocessTransport).__del__:pytest.PytestUnraisableExceptionWarning",
 ]
 
 [tool.ruff]
