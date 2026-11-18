@@ -186,8 +186,13 @@ async function loadHealth() {
   try {
     const health = await fetch("/health").then((r) => r.json());
     const model = health.config.llm_mode === "openai" ? health.config.llm_model : "the offline mock model";
+    const portal = health.config.demo_portal_url;
     env.replaceChildren(h("span", { class: `dot${health.status === "ok" ? "" : " bad"}` }),
-      health.status === "ok" ? `Connected. Drafts are written by ${model}.` : "The database is unavailable.");
+      health.status === "ok" ? `Connected. Drafts are written by ${model}.` : "The database is unavailable.",
+      portal ? h("a", {
+        class: "portal-link", href: portal, target: "_blank", rel: "noopener noreferrer",
+        title: "The fictional website the browser automation signs in to. You don't need to sign in there.",
+      }, "Practice website") : null);
   } catch {
     env.replaceChildren(h("span", { class: "dot bad" }), "Can't reach the server.");
   }

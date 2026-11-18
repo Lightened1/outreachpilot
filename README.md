@@ -145,6 +145,7 @@ outreachpilot/
 │   ├── pipeline_demo.py     # research -> generate -> approve -> send in one terminal
 │   └── api_walkthrough.py   # the full workflow through the REST API
 ├── tests/                   # pytest suite (unit, browser, database, API, end-to-end)
+├── start.py / start.bat     # one-command demo start: practice website + app + browser
 ├── docs/                    # architecture notes, demo video script
 ├── .github/workflows/ci.yml # lint + full test suite on every push
 ├── .env.example
@@ -192,7 +193,23 @@ All settings are environment variables, which can also be put in a `.env` file. 
 
 ## Running
 
-Use two terminals.
+### Quick start (one command)
+
+```bash
+python start.py
+```
+
+On Windows you can also double-click **`start.bat`**. This does four things:
+- starts the practice website (port 8010) and the app (port 8000);
+- loads the seven demo prospects the first time;
+- opens **http://127.0.0.1:8000** in your browser;
+- prints what to click.
+
+Press Ctrl+C to stop. The practice website is the fictional site the robot browser signs in to, and you never need to sign in there yourself.
+
+### Running the parts separately
+
+For development, use two terminals.
 
 ```bash
 # 1. the demo portal (http://127.0.0.1:8010, login demo / demo-password)

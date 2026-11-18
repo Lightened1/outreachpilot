@@ -79,6 +79,7 @@ code { font-size: 0.9em; background: var(--paper); padding: 0 4px; border-radius
 .env { color: var(--graphite); font-size: var(--s-1); }
 .env .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--go); margin-right: 6px; vertical-align: 1px; }
 .env .dot.bad { background: var(--stop); }
+.env .portal-link { margin-left: 12px; }
 .topbar-actions { margin-left: auto; display: flex; gap: 8px; }
 
 /* ---- buttons & fields ------------------------------------------------------------------------ */

@@ -244,7 +244,7 @@ class FakeApi:
                 "app": "OutreachPilot",
                 "version": "1.0.0",
                 "database": "ok",
-                "config": {"llm_mode": "mock", "llm_model": "mock"},
+                "config": {"llm_mode": "mock", "llm_model": "mock", "demo_portal_url": "http://127.0.0.1:8010"},
                 "tasks": {},
                 "time": NOW,
             }
@@ -384,6 +384,7 @@ def test_console_opens_on_the_review_queue(ui_url: str, browser_page: Page) -> N
     expect(page.get_by_role("tab", name=re.compile("Needs review"))).to_have_attribute("aria-selected", "true")
     expect(page.locator(".pitem")).to_have_count(1)
     expect(page.locator("#env")).to_contain_text("offline mock model")
+    expect(page.get_by_role("link", name="Practice website")).to_have_attribute("href", "http://127.0.0.1:8010")
     page.get_by_role("tab", name=re.compile("^All")).click()
     expect(page.locator(".pitem")).to_have_count(4)
     shot(page, "01-list")

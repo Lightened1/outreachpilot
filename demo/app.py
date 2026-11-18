@@ -123,10 +123,16 @@ async def health(request: Request) -> Response:
     return JSONResponse({"status": "ok"})
 
 
+def _login_context(request: Request, nxt: str, error: str | None) -> dict[str, object]:
+    cfg = _config(request)
+    # Only reveal the stock demo login; a custom DEMO_PASSWORD is never shown.
+    shown = cfg.username if (cfg.username, cfg.password) == ("demo", "demo-password") else None
+    return {"next": nxt, "error": error, "demo_username": shown, "demo_password": "demo-password" if shown else None}
+
+
 async def login_page(request: Request) -> Response:
-    return TEMPLATES.TemplateResponse(
-        request, "login.html", {"next": request.query_params.get("next", "/people"), "error": None}
-    )
+    nxt = request.query_params.get("next", "/people")
+    return TEMPLATES.TemplateResponse(request, "login.html", _login_context(request, nxt, None))
 
 
 async def login_submit(request: Request) -> Response:
@@ -143,7 +149,7 @@ async def login_submit(request: Request) -> Response:
         resp.set_cookie(SESSION_COOKIE, token, httponly=True, samesite="lax")
         return resp
     return TEMPLATES.TemplateResponse(
-        request, "login.html", {"next": nxt, "error": "Invalid username or password."}, status_code=401
+        request, "login.html", _login_context(request, nxt, "Invalid username or password."), status_code=401
     )
 
 

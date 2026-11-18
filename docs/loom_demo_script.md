@@ -1,13 +1,15 @@
 # Demo video script (about 6 minutes)
 
-Before recording:
+Before recording, start everything and watch the browser work:
 
 ```bash
-python -m demo                                   # terminal 1: portal on :8010
-BROWSER_HEADLESS=false BROWSER_SLOW_MO_MS=300 uvicorn app.main:app --port 8000   # terminal 2: API, visible browser
+BROWSER_HEADLESS=false BROWSER_SLOW_MO_MS=300 python start.py      # macOS / Linux
+```
+```powershell
+$env:BROWSER_HEADLESS="false"; $env:BROWSER_SLOW_MO_MS="300"; python start.py   # Windows PowerShell
 ```
 
-Have these open: the console (`http://127.0.0.1:8000`), the Swagger UI (`/docs`), the portal (`http://127.0.0.1:8010`, login `demo` / `demo-password`), a terminal and the code editor. Import `docs/demo_prospects.csv` in the console before recording, so the list isn't empty.
+Have these open: the console (`http://127.0.0.1:8000`), the Swagger UI (`/docs`), the portal (`http://127.0.0.1:8010`, login `demo` / `demo-password`), a terminal and the code editor. `start.py` loads the demo prospects on first run, so the list is never empty.
 
 | # | Time | Show | Say |
 |---|---|---|---|
