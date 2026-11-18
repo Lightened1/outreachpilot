@@ -438,6 +438,9 @@ def test_blocked_prospect_explains_that_automation_stopped(ui_url: str, browser_
     expect(page.locator(".step.warn")).to_have_text("Researched")
     expect(page.get_by_role("button", name="Try research again")).to_be_visible()
     shot(page, "04-blocked")
+    page.evaluate("location.hash = '#/all/4'")  # links and back/forward change only the hash
+    expect(page.locator("#p-name")).to_have_text("Tomás Ferreira")
+    expect(page.get_by_role("button", name="Research profile")).to_be_visible()
 
 
 def test_api_key_is_requested_and_then_sent(ui_url: str, browser_page: Page) -> None:

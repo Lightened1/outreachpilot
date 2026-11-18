@@ -896,6 +896,13 @@ async function boot() {
   await loadList();
   if (fromHash) await select(fromHash);
   syncHash();
+  window.addEventListener("hashchange", () => {
+    const id = readHash();
+    renderFilters();
+    loadList();
+    if (id && id !== state.selectedId) select(id);
+    else if (!id && state.selectedId) clearSelection();
+  });
   window.setInterval(() => {
     if (document.visibilityState === "visible") { loadStats(); loadList(); }
   }, 15000);
