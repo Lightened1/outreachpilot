@@ -24,6 +24,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import re
+import sys
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
@@ -35,7 +36,14 @@ from playwright.async_api import Browser, BrowserContext, Page, Playwright, Resp
 from app.automation.errors import translate_errors
 from app.automation.robots import RobotsPolicy
 from app.config import Settings
-from app.core.errors import AccessBlockedError, AppError, HostNotAllowedError, NavigationError, PageNotFoundError
+from app.core.errors import (
+    AccessBlockedError,
+    AppError,
+    ConfigurationError,
+    HostNotAllowedError,
+    NavigationError,
+    PageNotFoundError,
+)
 from app.core.logging import get_logger
 from app.core.rate_limit import KeyedRateLimiter
 
@@ -73,6 +81,12 @@ class BrowserEngine:
         async with self._start_lock:
             if self.started:
                 return
+            if sys.platform == "win32" and not isinstance(asyncio.get_running_loop(), asyncio.ProactorEventLoop):
+                # uvicorn --reload on Windows uses a selector loop, which cannot start subprocesses.
+                raise ConfigurationError(
+                    "Playwright cannot start a browser on Windows with this event loop. Start the API "
+                    "without --reload: uvicorn app.main:app --port 8000"
+                )
             with translate_errors("launch the browser"):
                 self._playwright = await async_playwright().start()
                 self._browser = await self._playwright.chromium.launch(

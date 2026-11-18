@@ -199,8 +199,10 @@ Use two terminals.
 python -m demo
 
 # 2. the API and console
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --port 8000
 ```
+
+Don't add `--reload` on Windows: uvicorn then switches to an event loop that can't start the browser, and research or sending fails with a message saying so.
 
 Open **http://127.0.0.1:8000** for the operator console, or **/docs** for the Swagger UI. In the console, add a prospect with the profile URL `http://127.0.0.1:8010/people/1` (or import a CSV), then click through *Research profile → Write draft → Approve → Send message*. To load all seven demo people at once, use **Import CSV** with [`docs/demo_prospects.csv`](docs/demo_prospects.csv). It includes the slow, flaky, blocked and robots-disallowed cases.
 
