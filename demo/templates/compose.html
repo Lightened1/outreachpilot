@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}Message {{ p.name }} · Demo Prospect Portal{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>New message</h1>
+  <p>To: <strong data-testid="recipient-name">{{ p.name }}</strong> <span class="muted">({{ p.headline }}, {{ p.company }})</span></p>
+  {% if error %}<p class="error" data-testid="compose-error">{{ error }}</p>{% endif %}
+  <form method="post" action="/people/{{ p.id }}/message" data-testid="compose-form">
+    <input type="hidden" name="idempotency_key" value="{{ key }}" data-testid="idempotency-key">
+    <label for="subject">Subject</label>
+    <input type="text" id="subject" name="subject" maxlength="200" data-testid="compose-subject">
+    <label for="body">Message</label>
+    <textarea id="body" name="body" maxlength="2000" data-testid="compose-body"></textarea>
+    <button type="submit" data-testid="send-button">Send message</button>
+  </form>
+</div>
+{% endblock %}

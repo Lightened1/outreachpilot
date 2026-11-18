@@ -1,0 +1,8 @@
+name,job_title,company,source_url,notes
+Priya Raman,Head of Operations,Bluefin Logistics,http://demo:8010/people/1,
+Marcus Oyelaran,VP of Engineering,Tidewater Health,http://demo:8010/people/2,
+Elena Varga,Data Platform Lead,Kestrel Energy,http://demo:8010/people/3,
+Tomás Ferreira,Procurement Manager,Atlas Fixtures,http://demo:8010/people/4,Slow page: shows the timeout and retries
+Hana Sato,Customer Success Director,Meridian Labs,http://demo:8010/people/5,Access challenge: shows a safe stop
+Daniel Kim,Finance Operations Lead,Harbor & Pine,http://demo:8010/people/6,"Fails twice with 503, then works"
+Sofia Lindqvist,Chief of Staff,Polar Robotics,http://demo:8010/private/people/7,Disallowed by robots.txt

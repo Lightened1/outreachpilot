@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}{{ p.name }} · Demo Prospect Portal{% endblock %}
+{% block content %}
+<div class="card" data-testid="profile">
+  <h1 data-testid="person-name">{{ p.name }}</h1>
+  <div><span data-testid="person-headline">{{ p.headline }}</span> at <strong data-testid="person-company">{{ p.company }}</strong></div>
+  <div class="muted" data-testid="person-location">{{ p.location }}</div>
+  <h2>About</h2>
+  <p data-testid="person-about">{{ p.about }}</p>
+  <h2>Recent activity</h2>
+  {% if p.recent_activity %}
+  <ul>{% for a in p.recent_activity %}<li data-testid="activity-item">{{ a }}</li>{% endfor %}</ul>
+  {% else %}<p class="muted" data-testid="no-activity">No recent activity.</p>{% endif %}
+  <h2>Skills</h2>
+  <div class="chips">{% for s in p.skills %}<span data-testid="skill-item">{{ s }}</span>{% endfor %}</div>
+  {% if not p.private %}<p><a href="/people/{{ p.id }}/message" data-testid="message-link">Send a message</a></p>{% endif %}
+</div>
+{% endblock %}

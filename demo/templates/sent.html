@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Message sent · Demo Prospect Portal{% endblock %}
+{% block content %}
+<div class="card" data-testid="sent-confirmation">
+  <h1>Message sent</h1>
+  {% if duplicate %}<p class="ok" data-testid="duplicate-notice">This message was already sent earlier; it was not sent again.</p>{% endif %}
+  <p>Confirmation: <strong data-testid="confirmation-id">{{ m.id }}</strong></p>
+  <p>To: <span data-testid="sent-recipient">{{ m.recipient }}</span> &middot; <span class="muted">{{ m.sent_at }}</span></p>
+  <p>Subject: <span data-testid="sent-subject">{{ m.subject }}</span></p>
+  <pre style="white-space:pre-wrap" data-testid="sent-body">{{ m.body }}</pre>
+</div>
+{% endblock %}

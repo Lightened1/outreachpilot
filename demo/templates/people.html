@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% block title %}People · Demo Prospect Portal{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>People</h1>
+  <form method="get" action="/people" data-testid="search-form">
+    <input type="text" name="q" value="{{ q }}" placeholder="Search by name, company or title" data-testid="search-input">
+    <button type="submit" data-testid="search-submit">Search</button>
+  </form>
+  <table data-testid="people-table">
+    <thead><tr><th>Name</th><th>Title</th><th>Company</th></tr></thead>
+    <tbody>
+    {% for p in people %}
+      <tr data-testid="person-row" data-person-id="{{ p.id }}">
+        <td><a href="/people/{{ p.id }}" data-testid="person-link">{{ p.name }}</a></td>
+        <td>{{ p.headline }}</td><td>{{ p.company }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="3" class="muted" data-testid="no-results">No people match "{{ q }}".</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+services:
+  demo:
+    build: .
+    image: outreachpilot:latest
+    command: ["python", "-m", "demo"]
+    environment:
+      DEMO_HOST: 0.0.0.0
+      DEMO_PORT: "8010"
+    ports:
+      - "8010:8010"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8010/health', timeout=4)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    image: outreachpilot:latest
+    depends_on:
+      demo:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Inside the compose network the portal is reachable as "demo".
+      DEMO_PORTAL_URL: http://demo:8010
+      ALLOWED_AUTOMATION_HOSTS: demo,localhost,127.0.0.1
+    ports:
+      - "8000:8000"
+    volumes:
+      - op-data:/app/data
+      - op-artifacts:/app/artifacts
+      - op-sessions:/app/.sessions
+
+volumes:
+  op-data:
+  op-artifacts:
+  op-sessions:

@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Access restricted{% endblock %}
+{% block content %}
+<div class="card" data-testid="access-blocked">
+  <h1>Unusual activity detected</h1>
+  <p>Access to this page is temporarily restricted. Please complete a verification check before continuing.</p>
+  <p class="muted">(Simulated anti-bot challenge. OutreachPilot is designed to stop and report here, never to bypass it.)</p>
+</div>
+{% endblock %}

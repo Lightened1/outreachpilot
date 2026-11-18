@@ -1,0 +1,27 @@
+[project]
+name = "outreachpilot"
+version = "1.0.0"
+description = "AI-assisted browser automation and outreach workflow with human approval (FastAPI + Playwright)."
+requires-python = ">=3.11"
+readme = "README.md"
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "browser: tests that launch a real Chromium via Playwright",
+    "api: tests that need FastAPI + SQLAlchemy installed",
+]
+filterwarnings = ["ignore::DeprecationWarning:uvicorn.*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "ASYNC", "RUF", "BLE"]
+ignore = ["B008", "RUF001", "RUF002", "RUF003", "RUF012", "B904", "UP042", "ASYNC109"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011", "ASYNC240"]
